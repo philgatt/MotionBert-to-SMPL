@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "video-to-smpl"
+version = "0.1.0"
+description = "Video to SMPL with AlphaPose, MotionBERT, and three pose recovery methods"
+readme = "README.md"
+requires-python = ">=3.7"
+dependencies = ["numpy>=1.21,<2", "scipy>=1.7", "torch>=1.13", "smplx>=0.1.28", "opencv-python>=4.7", "PyYAML>=6", "matplotlib>=3.5", "timm>=0.9", "einops>=0.6"]
+
+[project.scripts]
+video-to-smpl = "video_to_smpl.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

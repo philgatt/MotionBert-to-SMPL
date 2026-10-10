@@ -1,0 +1,62 @@
+[
+  {
+    "source": "scripts/stages/run_smpl.py",
+    "sha256": "be80027bed3baa14a9681cec5deaf3901f93c62387be2d529122953a07263812",
+    "destination": "methods/kinematics.py",
+    "symbols": [
+      "_BODY_PARTS",
+      "_M2B_CHILDREN",
+      "_M2B_EPS",
+      "_M2B_IDX",
+      "_M2B_ORDER",
+      "_M2B_PARENT",
+      "_MAPPING",
+      "_apply_mapping",
+      "_channels_to_smpl_translations_and_thetas",
+      "_euler_to_quaternion_zxy",
+      "_m2b_build_pelvis_frame",
+      "_m2b_normalize",
+      "_m2b_rodrigues_from_a_to_b",
+      "_m2b_rotation_matrix_to_euler_zxy_degrees",
+      "_require_scipy",
+      "_rigid_align_svd",
+      "_rodrigues_from_quat_wxyz",
+      "calculate_smpl_params_from_x3d_motionbert_bvh_rodrigues"
+    ]
+  },
+  {
+    "source": "scripts/stages/run_smpl.py",
+    "sha256": "be80027bed3baa14a9681cec5deaf3901f93c62387be2d529122953a07263812",
+    "destination": "methods/optimization.py",
+    "symbols": [
+      "_H36M17_TO_SMPL24_SUBSET",
+      "_H36M_BONE_LENGTH_PRIORS_M",
+      "_POSE_TO_SMPL_H36M17_AXIS_SCALE",
+      "_SMPL24_SUBSET_FROM_H36M17",
+      "_compute_h36m_bone_lengths_per_frame",
+      "_compute_sequence_scale_to_smpl_rest",
+      "_run_pose_to_smpl_fit_from_x3d"
+    ]
+  },
+  {
+    "source": "scripts/experiments/rq3/keypoints_to_smpl/run_res_tcn_shape_test.py",
+    "sha256": "f8cb4e367a1f189d63019f4df68120b345c4892930cf14ce09755481bf677a6f",
+    "destination": "methods/shape_inference.py",
+    "symbols": [
+      "_contiguous_segments",
+      "_make_windows",
+      "_model_from_checkpoint",
+      "_predict_track"
+    ]
+  },
+  {
+    "source": "scripts/experiments/rq3/keypoints_to_smpl/smplr_style_model.py",
+    "sha256": "954b8f3c90b1ad71160f0361e337559459bf2801f1cb708f4c9a0dcc4d7a3573",
+    "destination": "methods/smplr_style_model.py"
+  },
+  {
+    "source": "scripts/experiments/rq3/keypoints_to_smpl/res_tcn_shape_model.py",
+    "sha256": "aa1678971c90c838832293447090245a45385652abce2e51911f85e4da4af6cd",
+    "destination": "methods/res_tcn_shape_model.py"
+  }
+]

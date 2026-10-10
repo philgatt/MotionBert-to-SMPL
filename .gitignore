@@ -1,0 +1,25 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+outputs/
+training-runs/
+assets/
+third_party/
+configs/local*.json
+*.pt
+*.pth
+*.bin
+*.pkl
+*.npz
+*.npy
+*.mp4
+*.avi
+# The compact, newly trained Figure 3.3 pose-only checkpoint is part of this project.
+!models/pose_only_smplr_vibe_relu_bn_20261008.pt
+!models/pose_only_smplr_motionbert_vibe_relu_bn_20261008.pt
+!models/pose_only_smplr_motionbert_global_elu_bn_20261009.pt
+!models/shape_only_res_tcn_motionbert_rx180_20261010.pt
+.DS_Store

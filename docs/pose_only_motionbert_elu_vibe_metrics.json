@@ -1,0 +1,12 @@
+{
+  "protocol": "VIBE",
+  "input": "stored 3DPW MotionBERT X3D predictions",
+  "activation": "elu",
+  "frames": 34561,
+  "unmatched_motionbert_frames": 5658,
+  "rx180": false,
+  "mpjpe_mm": 103.43775898218155,
+  "pa_mpjpe_mm": 64.75294381380081,
+  "pve_mm": 121.03431671857834,
+  "checkpoint": "F:\\Bachelor\\Pose Estimation 3D\\video-to-smpl\\training-runs\\pose_only_smplr_motionbert_global_elu_bn_20261009\\checkpoints\\best_model.pt"
+}

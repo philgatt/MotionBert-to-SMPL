@@ -1,0 +1,21 @@
+{
+  "alphapose_repo": "../third_party/AlphaPose",
+  "alphapose_python": "python",
+  "alphapose_config": "../third_party/AlphaPose/configs/halpe_26/resnet/256x192_res50_lr1e-3_1x.yaml",
+  "alphapose_checkpoint": "../assets/halpe26_fast_res50_256x192.pth",
+  "motionbert_repo": "../third_party/MotionBERT",
+  "motionbert_config": "../third_party/MotionBERT/configs/pose3d/MB_ft_h36m_global_lite.yaml",
+  "motionbert_checkpoint": "../assets/motionbert.bin",
+  "smpl_model": "../assets/SMPL_NEUTRAL.pkl",
+  "h36m_regressor": "../assets/J_regressor_h36m_correct.npy",
+  "pose_checkpoint": "../models/pose_only_smplr_motionbert_global_elu_bn_20261009.pt",
+  "shape_checkpoint": "../models/shape_only_res_tcn_motionbert_rx180_20261010.pt",
+  "pose_rx180": false,
+  "shape_rx180": true,
+  "shape_root_center": false,
+  "shape_stride": 1,
+  "clip_len": 50,
+  "batch_size": 64,
+  "optimization_iterations": 200,
+  "optimization_lr": 0.01
+}

@@ -1,0 +1,10 @@
+{
+  "protocol": "VIBE/3DPW test: theta=0 for predicted and ground-truth SMPL; PVE only; median beta per track",
+  "checkpoint": "F:\\Bachelor\\Pose Estimation 3D\\video-to-smpl\\models\\shape_only_res_tcn_motionbert_rx180_20261010.pt",
+  "tracks": 37,
+  "frames": 34561,
+  "unmatched_motionbert_frames": 5658,
+  "rx180": true,
+  "pve_mm_track_mean": 26.488910675048828,
+  "pve_mm_frame_weighted": 26.615620134904518
+}

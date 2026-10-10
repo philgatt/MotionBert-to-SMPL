@@ -1,0 +1,11 @@
+{
+  "protocol": "VIBE",
+  "input": "stored 3DPW MotionBERT X3D predictions",
+  "frames": 34561,
+  "unmatched_motionbert_frames": 5658,
+  "rx180": false,
+  "mpjpe_mm": 793.3626174926758,
+  "pa_mpjpe_mm": 69.16868686676025,
+  "pve_mm": 810.9093904495239,
+  "checkpoint": "F:\\Bachelor\\Pose Estimation 3D\\video-to-smpl\\training-runs\\pose_only_smplr_motionbert_incam_vibe_relu_bn_20261009\\checkpoints\\best_model.pt"
+}
