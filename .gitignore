@@ -25,5 +25,5 @@ configs/local*.json
 # The README demonstration is intentionally versioned; other generated assets remain local.
 !assets/
 assets/*
-!assets/fencing_side_by_side.mp4
+!assets/fencing_pipeline.mp4
 .DS_Store

@@ -90,13 +90,12 @@ def preview3d(data, fps, destination, faces=None):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d import Axes3D  # noqa: F401 - registers the "3d" projection
     fig = plt.figure(figsize=(6,6), dpi=100)
     ax = fig.add_subplot(111, projection="3d")
-    bound = 0.01
-    for points in data:
-        centered = points if faces is not None else points - points[:1]
-        bound = max(bound, float(np.max(np.abs(centered))))
-    bound *= 1.1
+    # A single implausible 3D joint should not shrink the whole animation.
+    frame_extents = [max(0.01, float(np.max(np.abs(points - points[:1])))) for points in data]
+    bound = float(np.quantile(frame_extents, 0.95)) * 1.1
     out = writer(destination, fps, (600,600))
     try:
         for index, points in enumerate(data):
