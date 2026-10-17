@@ -22,4 +22,8 @@ configs/local*.json
 !models/pose_only_smplr_motionbert_vibe_relu_bn_20261008.pt
 !models/pose_only_smplr_motionbert_global_elu_bn_20261009.pt
 !models/shape_only_res_tcn_motionbert_rx180_20261010.pt
+# The README demonstration is intentionally versioned; other generated assets remain local.
+!assets/
+assets/*
+!assets/fencing_side_by_side.mp4
 .DS_Store

@@ -6,6 +6,14 @@ A small inference project extracted from the thesis pipeline:
 
 Choose pose and shape independently. No evaluation dataset or ground-truth annotations are needed.
 
+## Example: fencing reconstruction
+
+This 3DPW test sequence uses the learned pose and temporal-shape models. The original video and the SMPL reconstruction are shown in equally sized square panels.
+
+<video src="assets/fencing_side_by_side.mp4" controls muted loop playsinline width="100%">
+  <a href="assets/fencing_side_by_side.mp4">Watch the fencing reconstruction</a>
+</video>
+
 | Option | Implementation |
 | --- | --- |
 | `--pose kinematic` | Existing MotionBERT/BVH Rodrigues solver, including pelvis orientation and head direction |
