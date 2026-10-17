@@ -12,7 +12,7 @@ HALPE_EDGES = [(5,7),(7,9),(6,8),(8,10),(5,6),(5,11),(6,12),(11,12),
 # Matplotlib's default 3D camera leaves too much empty space around an upright body.
 # A shorter camera distance provides a useful close-up while the small fit margin
 # still keeps hands, feet and the head inside the frame.
-MESH_CAMERA_DISTANCE = 4.5
+MESH_CAMERA_DISTANCE = 3.0
 MESH_FIT_MARGIN = 1.0
 
 
@@ -21,6 +21,27 @@ def writer(path, fps, size):
     if not result.isOpened():
         raise RuntimeError(f"Could not create preview: {path}")
     return result
+
+
+def tighten_mesh_frame(rgba, fill=0.88, padding=0.08):
+    """Crop the rendered mesh and scale it to a useful, whole-body close-up."""
+    rgb = rgba[..., :3]
+    mask = np.any(rgb < 235, axis=2)  # white canvas has no mesh pixels
+    y, x = np.where(mask)
+    if not len(x):
+        return rgba
+    margin = max(4, round(max(x.ptp() + 1, y.ptp() + 1) * padding))
+    left, right = max(0, x.min() - margin), min(rgba.shape[1], x.max() + margin + 1)
+    top, bottom = max(0, y.min() - margin), min(rgba.shape[0], y.max() + margin + 1)
+    crop = rgba[top:bottom, left:right]
+    scale = min((rgba.shape[1] * fill) / crop.shape[1], (rgba.shape[0] * fill) / crop.shape[0])
+    size = (max(1, round(crop.shape[1] * scale)), max(1, round(crop.shape[0] * scale)))
+    resized = cv2.resize(crop, size, interpolation=cv2.INTER_CUBIC)
+    canvas = np.full_like(rgba, 255)
+    y0 = (canvas.shape[0] - resized.shape[0]) // 2
+    x0 = (canvas.shape[1] - resized.shape[1]) // 2
+    canvas[y0:y0 + resized.shape[0], x0:x0 + resized.shape[1]] = resized
+    return canvas
 
 
 def overlay(video, coords, fps, destination):
@@ -77,8 +98,9 @@ def preview3d(data, fps, destination, faces=None):
                 shade = 0.4 + 0.6 * np.clip(normals @ (light / np.linalg.norm(light)), 0, 1)
                 colors = shade[:,None] * np.array([0.35,0.64,0.74])
                 ax.add_collection3d(Poly3DCollection(triangles, facecolor=colors, edgecolor="none", alpha=1))
-            ax.set(xlim=(-bound,bound), ylim=(-bound,bound), zlim=(-bound,bound),
-                   title=f"{'SMPL' if faces is not None else 'MotionBERT'} · frame {index}")
+            ax.set(xlim=(-bound,bound), ylim=(-bound,bound), zlim=(-bound,bound))
+            if faces is None:
+                ax.set_title(f"MotionBERT · frame {index}")
             if hasattr(ax, "set_box_aspect"):
                 ax.set_box_aspect((1,1,1))
             if faces is not None:
@@ -86,7 +108,9 @@ def preview3d(data, fps, destination, faces=None):
             ax.view_init(elev=12, azim=-65)
             ax.set_axis_off()
             fig.canvas.draw()
-            rgba = np.asarray(fig.canvas.buffer_rgba())
+            rgba = np.asarray(fig.canvas.buffer_rgba()).copy()
+            if faces is not None:
+                rgba = tighten_mesh_frame(rgba)
             out.write(cv2.cvtColor(rgba, cv2.COLOR_RGBA2BGR))
     finally:
         out.release()
