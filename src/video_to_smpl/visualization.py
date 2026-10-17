@@ -107,7 +107,7 @@ def preview3d(data, fps, destination, faces=None):
             p[:,2] *= -1
             for a,b in H36M_EDGES:
                 ax.plot(*p[[a,b]].T, color="#167d9a", linewidth=3.5)
-            ax.scatter(*p.T, color="#ff9f1c", s=28, depthshade=False, edgecolors="white", linewidths=0.6)
+            ax.scatter(*p.T, color="#003f7f", s=78, depthshade=False, edgecolors="white", linewidths=0.8)
             ax.set(xlim=(-bound,bound), ylim=(-bound,bound), zlim=(-bound,bound))
             if hasattr(ax, "set_box_aspect"):
                 ax.set_box_aspect((1,1,1))
