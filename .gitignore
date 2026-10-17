@@ -26,4 +26,5 @@ configs/local*.json
 !assets/
 assets/*
 !assets/fencing_full_pipeline.mp4
+!assets/fencing_preview.gif
 .DS_Store
