@@ -9,6 +9,12 @@ H36M_EDGES = [(0,1),(1,2),(2,3),(0,4),(4,5),(5,6),(0,7),(7,8),(8,9),
 HALPE_EDGES = [(5,7),(7,9),(6,8),(8,10),(5,6),(5,11),(6,12),(11,12),
               (11,13),(13,15),(12,14),(14,16),(0,17),(17,18),(18,19)]
 
+# Matplotlib's default 3D camera leaves too much empty space around an upright body.
+# A shorter camera distance provides a useful close-up while the small fit margin
+# still keeps hands, feet and the head inside the frame.
+MESH_CAMERA_DISTANCE = 4.5
+MESH_FIT_MARGIN = 1.0
+
 
 def writer(path, fps, size):
     result = cv2.VideoWriter(str(path), cv2.VideoWriter_fourcc(*"mp4v"), fps, size)
@@ -51,7 +57,7 @@ def preview3d(data, fps, destination, faces=None):
     for points in data:
         centered = points if faces is not None else points - points[:1]
         bound = max(bound, float(np.max(np.abs(centered))))
-    bound *= 1.1
+    bound *= MESH_FIT_MARGIN if faces is not None else 1.1
     out = writer(destination, fps, (600,600))
     try:
         for index, points in enumerate(data):
@@ -75,6 +81,8 @@ def preview3d(data, fps, destination, faces=None):
                    title=f"{'SMPL' if faces is not None else 'MotionBERT'} · frame {index}")
             if hasattr(ax, "set_box_aspect"):
                 ax.set_box_aspect((1,1,1))
+            if faces is not None:
+                ax.dist = MESH_CAMERA_DISTANCE
             ax.view_init(elev=12, azim=-65)
             ax.set_axis_off()
             fig.canvas.draw()
