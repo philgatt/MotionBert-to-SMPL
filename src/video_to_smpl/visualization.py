@@ -9,11 +9,9 @@ H36M_EDGES = [(0,1),(1,2),(2,3),(0,4),(4,5),(5,6),(0,7),(7,8),(8,9),
 HALPE_EDGES = [(5,7),(7,9),(6,8),(8,10),(5,6),(5,11),(6,12),(11,12),
               (11,13),(13,15),(12,14),(14,16),(0,17),(17,18),(18,19)]
 
-# Matplotlib's default 3D camera leaves too much empty space around an upright body.
-# A shorter camera distance provides a useful close-up while the small fit margin
-# still keeps hands, feet and the head inside the frame.
-MESH_CAMERA_DISTANCE = 3.0
-MESH_FIT_MARGIN = 1.0
+# Perspective camera for SMPL mesh previews, in the transformed SMPL coordinate space.
+MESH_CAMERA_RADIUS = 3.0
+MESH_FOCAL_PIXELS = 780.0
 
 
 def writer(path, fps, size):
@@ -23,24 +21,37 @@ def writer(path, fps, size):
     return result
 
 
-def tighten_mesh_frame(rgba, fill=0.88, padding=0.08):
-    """Crop the rendered mesh and scale it to a useful, whole-body close-up."""
-    rgb = rgba[..., :3]
-    mask = np.any(rgb < 235, axis=2)  # white canvas has no mesh pixels
-    y, x = np.where(mask)
-    if not len(x):
-        return rgba
-    margin = max(4, round(max(x.ptp() + 1, y.ptp() + 1) * padding))
-    left, right = max(0, x.min() - margin), min(rgba.shape[1], x.max() + margin + 1)
-    top, bottom = max(0, y.min() - margin), min(rgba.shape[0], y.max() + margin + 1)
-    crop = rgba[top:bottom, left:right]
-    scale = min((rgba.shape[1] * fill) / crop.shape[1], (rgba.shape[0] * fill) / crop.shape[0])
-    size = (max(1, round(crop.shape[1] * scale)), max(1, round(crop.shape[0] * scale)))
-    resized = cv2.resize(crop, size, interpolation=cv2.INTER_CUBIC)
-    canvas = np.full_like(rgba, 255)
-    y0 = (canvas.shape[0] - resized.shape[0]) // 2
-    x0 = (canvas.shape[1] - resized.shape[1]) // 2
-    canvas[y0:y0 + resized.shape[0], x0:x0 + resized.shape[1]] = resized
+def mesh_camera_frame(points, faces, size=600):
+    """Render one mesh through a fixed, close perspective camera without OpenGL."""
+    vertices = points[:, [0, 2, 1]].copy()
+    vertices[:, 2] *= -1
+    low, high = vertices.min(axis=0), vertices.max(axis=0)
+    target = (low + high) * 0.5
+    azimuth, elevation = np.deg2rad(-65.0), np.deg2rad(12.0)
+    direction = np.array([np.cos(elevation) * np.cos(azimuth),
+                          np.cos(elevation) * np.sin(azimuth), np.sin(elevation)])
+    eye = target + direction * MESH_CAMERA_RADIUS
+    forward = target - eye
+    forward /= np.linalg.norm(forward)
+    right = np.cross(forward, np.array([0.0, 0.0, 1.0]))
+    right /= np.linalg.norm(right)
+    up = np.cross(right, forward)
+    relative = vertices - eye
+    camera = np.column_stack((relative @ right, relative @ up, relative @ forward))
+    depth = np.maximum(camera[:, 2], 1e-4)
+    projected = np.column_stack((MESH_FOCAL_PIXELS * camera[:, 0] / depth + size * 0.5,
+                                 -MESH_FOCAL_PIXELS * camera[:, 1] / depth + size * 0.5))
+    triangles = vertices[faces]
+    normals = np.cross(triangles[:, 1] - triangles[:, 0], triangles[:, 2] - triangles[:, 0])
+    normals /= np.maximum(np.linalg.norm(normals, axis=1, keepdims=True), 1e-8)
+    light = np.array([0.3, -0.7, 0.6]); light /= np.linalg.norm(light)
+    shade = 0.4 + 0.6 * np.clip(normals @ light, 0, 1)
+    colors = (shade[:, None] * np.array([0.35, 0.64, 0.74]) * 255).astype(np.uint8)
+    canvas = np.full((size, size, 3), 255, dtype=np.uint8)
+    order = np.argsort(camera[faces].mean(axis=1)[:, 2])[::-1]
+    for face_id in order:
+        polygon = np.rint(projected[faces[face_id]]).astype(np.int32)
+        cv2.fillConvexPoly(canvas, polygon, tuple(int(x) for x in colors[face_id][::-1]), lineType=cv2.LINE_AA)
     return canvas
 
 
@@ -68,17 +79,24 @@ def overlay(video, coords, fps, destination):
 
 
 def preview3d(data, fps, destination, faces=None):
+    if faces is not None:
+        out = writer(destination, fps, (600, 600))
+        try:
+            for points in data:
+                out.write(mesh_camera_frame(points, faces))
+        finally:
+            out.release()
+        return
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    from mpl_toolkits.mplot3d.art3d import Poly3DCollection
     fig = plt.figure(figsize=(6,6), dpi=100)
     ax = fig.add_subplot(111, projection="3d")
     bound = 0.01
     for points in data:
         centered = points if faces is not None else points - points[:1]
         bound = max(bound, float(np.max(np.abs(centered))))
-    bound *= MESH_FIT_MARGIN if faces is not None else 1.1
+    bound *= 1.1
     out = writer(destination, fps, (600,600))
     try:
         for index, points in enumerate(data):
@@ -87,30 +105,17 @@ def preview3d(data, fps, destination, faces=None):
             # The thesis pose outputs and MotionBERT predictions use camera y-down.
             p = p[:, [0,2,1]]
             p[:,2] *= -1
-            if faces is None:
-                for a,b in H36M_EDGES:
-                    ax.plot(*p[[a,b]].T, color="#167d9a", linewidth=2)
-            else:
-                triangles = p[faces]
-                normals = np.cross(triangles[:,1] - triangles[:,0], triangles[:,2] - triangles[:,0])
-                normals /= np.maximum(np.linalg.norm(normals, axis=1, keepdims=True), 1e-8)
-                light = np.array([0.3,-0.7,0.6])
-                shade = 0.4 + 0.6 * np.clip(normals @ (light / np.linalg.norm(light)), 0, 1)
-                colors = shade[:,None] * np.array([0.35,0.64,0.74])
-                ax.add_collection3d(Poly3DCollection(triangles, facecolor=colors, edgecolor="none", alpha=1))
+            for a,b in H36M_EDGES:
+                ax.plot(*p[[a,b]].T, color="#167d9a", linewidth=2)
             ax.set(xlim=(-bound,bound), ylim=(-bound,bound), zlim=(-bound,bound))
             if faces is None:
                 ax.set_title(f"MotionBERT · frame {index}")
             if hasattr(ax, "set_box_aspect"):
                 ax.set_box_aspect((1,1,1))
-            if faces is not None:
-                ax.dist = MESH_CAMERA_DISTANCE
             ax.view_init(elev=12, azim=-65)
             ax.set_axis_off()
             fig.canvas.draw()
-            rgba = np.asarray(fig.canvas.buffer_rgba()).copy()
-            if faces is not None:
-                rgba = tighten_mesh_frame(rgba)
+            rgba = np.asarray(fig.canvas.buffer_rgba())
             out.write(cv2.cvtColor(rgba, cv2.COLOR_RGBA2BGR))
     finally:
         out.release()
