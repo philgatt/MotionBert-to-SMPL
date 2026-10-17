@@ -106,10 +106,9 @@ def preview3d(data, fps, destination, faces=None):
             p = p[:, [0,2,1]]
             p[:,2] *= -1
             for a,b in H36M_EDGES:
-                ax.plot(*p[[a,b]].T, color="#167d9a", linewidth=2)
+                ax.plot(*p[[a,b]].T, color="#167d9a", linewidth=3.5)
+            ax.scatter(*p.T, color="#ff9f1c", s=28, depthshade=False, edgecolors="white", linewidths=0.6)
             ax.set(xlim=(-bound,bound), ylim=(-bound,bound), zlim=(-bound,bound))
-            if faces is None:
-                ax.set_title(f"MotionBERT · frame {index}")
             if hasattr(ax, "set_box_aspect"):
                 ax.set_box_aspect((1,1,1))
             ax.view_init(elev=12, azim=-65)
