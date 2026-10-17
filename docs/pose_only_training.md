@@ -38,10 +38,10 @@ The VIBE databases provide SMPL pose labels but do not contain saved MotionBERT 
 Run it with the compatible MotionBERT environment:
 
 ```powershell
-E:\miniconda-envs\motionbert\python.exe scripts\train_pose_only_smplr.py `
-  --vibe-root F:\Bachelor\Vibe\VIBE\data\vibe_db `
-  --motionbert-repo E:\Users\Philipp\Dokumente\Pose_Estimation_3D\MotionBert\MotionBERT `
-  --smpl-data-root E:\Users\Philipp\Dokumente\Pose_Estimation_3D\MotionBert\MotionBERT\data\mesh
+python scripts\train_pose_only_smplr.py `
+  --vibe-root <path-to-vibe-db> `
+  --motionbert-repo <path-to-motionbert> `
+  --smpl-data-root <path-to-motionbert-smpl-assets>
 ```
 
 The ELU MotionBERT-coordinate retraining is the bundled default: `models/pose_only_smplr_motionbert_global_elu_bn_20261009.pt`. It achieved **103.44 mm MPJPE**, **64.75 mm PA-MPJPE**, and **121.03 mm PVE** on the 34,561-frame 3DPW/VIBE test set. See `docs/pose_only_motionbert_elu_vibe_metrics.json`. `configs/example.json` selects this checkpoint and disables the legacy `rx180` conversion, which does not apply to it. The pipeline selects its ELU activation from checkpoint metadata automatically.

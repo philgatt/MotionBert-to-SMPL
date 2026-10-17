@@ -7,5 +7,5 @@
   "mpjpe_mm": 106.30985349416733,
   "pa_mpjpe_mm": 65.81941246986389,
   "pve_mm": 123.41976165771484,
-  "checkpoint": "F:\\Bachelor\\Pose Estimation 3D\\video-to-smpl\\training-runs\\pose_only_smplr_motionbert_vibe_relu_bn_20261008\\checkpoints\\best_model.pt"
+  "checkpoint": "training-runs/pose_only_smplr_motionbert_vibe_relu_bn_20261008/checkpoints/best_model.pt"
 }

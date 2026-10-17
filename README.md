@@ -18,10 +18,10 @@ The project includes recreated learned checkpoints. The pose model is the Figure
 
 ## Setup
 
-The existing `motionbert` conda environment is the verified environment for this project: Python 3.7, PyTorch 1.13.1 with CUDA, NumPy 1.21.5, SciPy 1.7.3, `smplx` 0.1.28, and Chumpy 0.70. It trains and loads the new learned-pose model. From this folder, use its Python executable directly or activate that environment:
+The `motionbert` conda environment is the verified environment for this project: Python 3.7, PyTorch 1.13.1 with CUDA, NumPy 1.21.5, SciPy 1.7.3, `smplx` 0.1.28, and Chumpy 0.70. It trains and loads the learned models. Activate the environment, then install this package from the project folder:
 
 ```sh
-E:\miniconda-envs\motionbert\python.exe -m pip install -e . --no-build-isolation
+python -m pip install -e . --no-build-isolation
 ```
 
 Install AlphaPose separately using its own installation instructions. Its Python environment can differ from this package's environment. Obtain a MotionBERT checkout, the HALPE-26 and MotionBERT checkpoints, the licensed neutral SMPL model, and the corresponding H36M-17 joint regressor. The learned pose and temporal shape checkpoints are included; third-party assets are deliberately not bundled.
