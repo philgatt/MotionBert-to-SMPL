@@ -1,18 +1,16 @@
 # Video to SMPL
 
+<video src="assets/fencing_full_pipeline.mp4" controls muted loop playsinline width="100%">
+  <a href="assets/fencing_full_pipeline.mp4">Watch the full fencing reconstruction</a>
+</video>
+
+The full 3DPW fencing sequence: input video, root-centred MotionBERT coordinates, and SMPL reconstruction, shown left to right in square panels.
+
 A small inference project extracted from the thesis pipeline:
 
 **Video → AlphaPose (HALPE-26) → MotionBERT (H36M-17) → SMPL pose + shape → optional previews.**
 
 Choose pose and shape independently. No evaluation dataset or ground-truth annotations are needed.
-
-## Example: fencing reconstruction
-
-This 3DPW test sequence uses the learned pose and temporal-shape models. The original video, root-centred MotionBERT coordinates, and SMPL reconstruction are shown from left to right in equally sized square panels.
-
-<video src="assets/fencing_pipeline.mp4" controls muted loop playsinline width="100%">
-  <a href="assets/fencing_pipeline.mp4">Watch the fencing reconstruction</a>
-</video>
 
 | Option | Implementation |
 | --- | --- |
