@@ -95,7 +95,8 @@ def preview3d(data, fps, destination, faces=None):
     ax = fig.add_subplot(111, projection="3d")
     # A single implausible 3D joint should not shrink the whole animation.
     frame_extents = [max(0.01, float(np.max(np.abs(points - points[:1])))) for points in data]
-    bound = float(np.quantile(frame_extents, 0.95)) * 1.1
+    # A tighter virtual view makes the 3D coordinate preview readable beside a mesh.
+    bound = float(np.quantile(frame_extents, 0.95)) * 0.45
     out = writer(destination, fps, (600,600))
     try:
         for index, points in enumerate(data):
