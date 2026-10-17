@@ -14,6 +14,18 @@ _PARENTS = [-1, 0, 1, 2, 0, 4, 5, 0, 7, 8, 9, 8, 11, 12, 8, 14, 15]
 _EDGES = [(parent, child) for child, parent in enumerate(_PARENTS) if parent >= 0]
 
 
+def axis_angle_to_matrix(axis_angle: torch.Tensor) -> torch.Tensor:
+    """Differentiable Rodrigues conversion used by the pose-training loss."""
+    angle = torch.linalg.norm(axis_angle, dim=-1, keepdim=True).clamp_min(1e-8)
+    axis = axis_angle / angle
+    x, y, z = axis.unbind(dim=-1)
+    zero = torch.zeros_like(x)
+    skew = torch.stack([zero, -z, y, z, zero, -x, -y, x, zero], dim=-1)
+    skew = skew.reshape(*axis.shape[:-1], 3, 3)
+    eye = torch.eye(3, dtype=axis.dtype, device=axis.device).view(*((1,) * (axis.dim() - 1)), 3, 3)
+    return eye + torch.sin(angle)[..., None] * skew + (1.0 - torch.cos(angle))[..., None] * (skew @ skew)
+
+
 class PoseOnlySMPLRRegressor(nn.Module):
     """48 -> 1024 -> 1024 -> 512 -> 512 -> 512 dual-head BN regressor."""
 

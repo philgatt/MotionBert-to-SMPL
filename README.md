@@ -14,7 +14,7 @@ Choose pose and shape independently. No evaluation dataset or ground-truth annot
 | `--shape neutral` | Ten zero shape coefficients |
 | `--shape temporal` | Existing residual temporal shape network; overlapping clips predict ten shape coefficients |
 
-The project includes recreated learned checkpoints. The pose model is the Figure 3.3 pose-only SMPLR architecture with a 48-dimensional root-centred bone-direction input and no shape branch. The temporal shape model is the Figure 3.4 eight-residual-block Res-TCN: raw non-root-centred 17-joint MotionBERT sequences, 50-frame windows, Rx180 coordinate convention, and a 10-coefficient regression head. The included shape checkpoint scores **26.62 mm frame-weighted PVE** on the VIBE/3DPW test protocol with neutral pose on both meshes; see [the training and evaluation record](docs/shape_only_training.md).
+The project includes recreated learned checkpoints. The pose model is the Figure 3.3 pose-only SMPLR architecture with a 48-dimensional root-centred bone-direction input and no shape branch. The temporal shape model is the Figure 3.4 eight-residual-block Res-TCN: raw non-root-centred 17-joint MotionBERT sequences, 50-frame windows, Rx180 coordinate convention, and a 10-coefficient regression head.
 
 ## Setup
 
@@ -36,7 +36,7 @@ Validate the selected asset paths:
 video-to-smpl --config configs/local.json --pose learned --shape temporal --check
 ```
 
-`--check` validates paths, not whether model weights are compatible. See `docs/assets.md` for checkpoint and coordinate requirements.
+`--check` validates paths, not whether model weights are compatible. Use the supplied checkpoint names and coordinate conventions from `configs/example.json`.
 
 ## Run
 
@@ -101,10 +101,10 @@ SMPL poses use axis-angle radians. To reproduce every method's mesh exactly, pas
 python -m unittest discover -s tests -v
 ```
 
-The tests cover timeline preservation, person selection, joint mapping, numerical rotation cases, temporal clip boundaries and output protection. They do not substitute for an end-to-end run with the required models. See `docs/validation.md` for the checks actually performed on this extraction.
+The tests cover timeline preservation, person selection, joint mapping, numerical rotation cases, temporal clip boundaries and output protection. They do not substitute for an end-to-end run with the required models.
 
 ## Provenance and publication
 
-The numerical methods and network definitions come from the existing thesis project. `docs/source_manifest.json` records original source paths, hashes and extracted symbols. The package has no runtime dependency on that project and makes no changes to it.
+The numerical methods and network definitions come from the existing thesis project. The package has no runtime dependency on that project and makes no changes to it.
 
 External dependencies retain their own terms; see `THIRD_PARTY.md`. A project license has not been chosen on the author's behalf. Before publishing, choose an appropriate license and provide compatible trained checkpoints through a separately approved distribution channel. Git ignores local configuration, outputs, videos, weights and body models.

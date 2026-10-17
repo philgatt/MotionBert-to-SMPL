@@ -1,8 +1,0 @@
-{
-  "protocol": "VIBE/3DPW test, controlled neutral-SMPL H36M-17 input; not end-to-end MotionBERT",
-  "frames": 34561,
-  "mpjpe_mm": 55.29092624783516,
-  "pa_mpjpe_mm": 34.12017971277237,
-  "root_aligned_pve_mm": 79.37180995941162,
-  "checkpoint": "models/pose_only_smplr_vibe_relu_bn_20261008.pt"
-}

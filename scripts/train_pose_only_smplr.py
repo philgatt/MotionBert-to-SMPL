@@ -17,8 +17,7 @@ from torch.utils.data import DataLoader, TensorDataset
 # receive an access-denied response for files on this workspace drive.
 PROJECT = Path(__file__).absolute().parent.parent
 sys.path.insert(0, str(PROJECT / "src"))
-from video_to_smpl.methods.pose_only_smplr import PoseOnlySMPLRRegressor
-from video_to_smpl.methods.smplr_style_model import axis_angle_to_matrix
+from video_to_smpl.methods.pose_only_smplr import PoseOnlySMPLRRegressor, axis_angle_to_matrix
 
 LANDMARKS = [3042, 4428, 3503, 4311, 822, 4361, 877, 4386, 898, 3222, 6620, 2544, 2820, 1258, 4116, 5365, 5989, 331]
 

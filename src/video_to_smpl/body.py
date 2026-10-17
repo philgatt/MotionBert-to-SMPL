@@ -75,14 +75,11 @@ def checkpoint_args(checkpoint):
 def learned_pose(coords, config, device):
     checkpoint = load_checkpoint(config["pose_checkpoint"])
     args = checkpoint_args(checkpoint)
-    if str(checkpoint.get("model_type", "")).startswith("pose_only_smplr_"):
-        from .methods.pose_only_smplr import PoseOnlySMPLRRegressor
-        activation = "elu" if "elu" in str(checkpoint.get("model_type", "")) else "relu"
-        model = PoseOnlySMPLRRegressor(activation=activation).to(device).eval()
-    else:
-        from .methods.smplr_style_model import SMPLRStyleRegressor
-        model = SMPLRStyleRegressor(dropout=float(args.get("dropout", 0)),
-            shape_feature_mode=str(args.get("shape_feature_mode", "bone_offsets"))).to(device).eval()
+    if not str(checkpoint.get("model_type", "")).startswith("pose_only_smplr_"):
+        raise ValueError("Expected the released pose-only SMPLR checkpoint.")
+    from .methods.pose_only_smplr import PoseOnlySMPLRRegressor
+    activation = "elu" if "elu" in str(checkpoint.get("model_type", "")) else "relu"
+    model = PoseOnlySMPLRRegressor(activation=activation).to(device).eval()
     model.load_state_dict(checkpoint["model_state_dict"], strict=True)
     x = coords.copy()
     if config.get("pose_rx180", True):
@@ -115,8 +112,8 @@ def temporal_shape(coords, config, device):
     checkpoint = load_checkpoint(config["shape_checkpoint"])
     args = checkpoint_args(checkpoint)
     architecture = str(args.get("architecture", checkpoint.get("architecture", "simple")))
-    if architecture not in {"simple", "staged", "paper_style", "paper_style_dilated", "motion_dilated", "stgcn"}:
-        raise ValueError(f"Unsupported shape architecture: {architecture}")
+    if architecture != "staged":
+        raise ValueError(f"Expected the released staged shape checkpoint, received {architecture!r}.")
     model = _model_from_checkpoint(checkpoint).to(device).eval()
     x = coords.copy()
     if config.get("shape_root_center", False):
