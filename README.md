@@ -1,5 +1,10 @@
 # Video to SMPL
 
+> [!IMPORTANT]
+> ## 🎓 [Read the accompanying Bachelor's thesis](docs/Monocular_Human_Mesh_Reconstruction_from_Sparse_3D_Keypoints.pdf)
+> **Monocular Human Mesh Reconstruction from Sparse 3D Keypoints**<br>
+> Johannes Kepler University Linz · October 2026
+
 https://github.com/user-attachments/assets/fc9e1649-e26f-4ee7-aa43-ad0a5fd82ad3
 
 The full 3DPW fencing sequence: input video, root-centred MotionBERT coordinates, and SMPL reconstruction, shown left to right in square panels.
