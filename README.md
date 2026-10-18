@@ -1,8 +1,8 @@
 # Video to SMPL
 
-[![Animated fencing pipeline preview](assets/fencing_preview.gif)](assets/fencing_full_pipeline.mp4)
+[▶ Watch the full fencing pipeline video](assets/fencing_full_pipeline.mp4)
 
-The full 3DPW fencing sequence: input video, root-centred MotionBERT coordinates, and SMPL reconstruction, shown left to right in square panels. Click the animation to open the full 31-second video.
+The full 3DPW fencing sequence: input video, root-centred MotionBERT coordinates, and SMPL reconstruction, shown left to right in square panels. The 31-second MP4 opens in GitHub's video player.
 
 A small inference project extracted from the thesis pipeline:
 
