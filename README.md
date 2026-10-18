@@ -1,13 +1,12 @@
 # Project for Bachelors Thesis in Artificial Intelligence
 
-**Video → AlphaPose (HALPE-26) → MotionBERT (H36M-17) → SMPL pose + shape → optional previews.**
+**Video → AlphaPose (HALPE-26) → MotionBERT (H36M-17) → SMPL pose + shape**
 
 > [!IMPORTANT]
-> ## 🎓 [Read the accompanying Bachelor's thesis](docs/Monocular_Human_Mesh_Reconstruction_from_Sparse_3D_Keypoints.pdf)
+> ## [Read the accompanying Bachelor's thesis](docs/Monocular_Human_Mesh_Reconstruction_from_Sparse_3D_Keypoints.pdf)
 > **Monocular Human Mesh Reconstruction from Sparse 3D Keypoints**<br>
-> Johannes Kepler University Linz · October 2026
 
-This repository is the accompanying code for the thesis. It turns a single-person video into AlphaPose 2D keypoints, lifts them to MotionBERT 3D keypoints, and estimates SMPL pose and shape parameters with learned regressors or a per-frame optimisation baseline.
+This repository is the accompanying code for the thesis. It turns a single-person video into AlphaPose 2D keypoints, lifts them to MotionBERT 3D keypoints, and estimates SMPL pose and shape parameters with learned regressors or a per-frame optimization baseline.
 
 **External projects and data:** [AlphaPose](https://github.com/MVIG-SJTU/AlphaPose) · [MotionBERT](https://github.com/Walter0807/MotionBERT) · [3DPW dataset](https://virtualhumans.mpi-inf.mpg.de/3DPW/)
 
@@ -45,7 +44,7 @@ Use `--parameters pose`, `shape`, or `both`. A mesh preview is created by defaul
 
 ## Train and evaluate on 3DPW
 
-Place the licensed dataset in [`data/3DPW`](data/README.md) and the VIBE split databases in `data/vibe_db`. The tracked [`data/README.md`](data/README.md) documents the required layout; downloaded data remains ignored by Git.
+Place the dataset in [`data/3DPW`](data/README.md) and the VIBE split databases in `data/vibe_db`. The tracked [`data/README.md`](data/README.md) documents the required layout; downloaded data remains ignored by Git.
 
 `run_3dpw_training.py` creates AlphaPose and MotionBERT intermediates when absent, then trains and evaluates the selected model. Provide the paths to your AlphaPose and MotionBERT installations and checkpoints:
 
