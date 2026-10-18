@@ -22,7 +22,7 @@ class InferenceCommandTests(unittest.TestCase):
         shape = INFER.pipeline_args(self._args("shape"))
         both = INFER.pipeline_args(self._args("both"))
         self.assertEqual((pose.pose, pose.shape), ("learned", "neutral"))
-        self.assertEqual((shape.pose, shape.shape), ("kinematic", "temporal"))
+        self.assertEqual((shape.pose, shape.shape), ("optimization", "temporal"))
         self.assertEqual((both.pose, both.shape), ("learned", "temporal"))
 
 

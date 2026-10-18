@@ -136,10 +136,7 @@ def recover(coords, pose_method, shape_method, config, device):
     rest = rest_joints(model, device)
     diagnostics = {}
     matrices = None
-    if pose_method == "kinematic":
-        from .methods.kinematics import calculate_smpl_params_from_x3d_motionbert_bvh_rodrigues
-        _, pose = calculate_smpl_params_from_x3d_motionbert_bvh_rodrigues(coords, rest)
-    elif pose_method == "optimization":
+    if pose_method == "optimization":
         from .methods.optimization import _run_pose_to_smpl_fit_from_x3d
         chunks = []
         losses = []

@@ -13,7 +13,7 @@ def parser():
     p = argparse.ArgumentParser(description="Video -> AlphaPose -> MotionBERT -> SMPL")
     p.add_argument("video", type=Path, nargs="?", help="Input video (one person recommended)")
     p.add_argument("--config", type=Path, required=True)
-    p.add_argument("--pose", choices=["kinematic", "optimization", "learned"], default="kinematic")
+    p.add_argument("--pose", choices=["optimization", "learned"], default="learned")
     p.add_argument("--shape", choices=["neutral", "temporal"], default="neutral")
     p.add_argument("--visualize", nargs="+", choices=["2d", "3d", "mesh"], default=[])
     p.add_argument("--output", type=Path, default=Path("outputs/run"), help="New output directory; existing nonempty folders are refused")

@@ -36,9 +36,9 @@ def pipeline_args(args: argparse.Namespace) -> argparse.Namespace:
     if args.parameters == "pose":
         pose, shape = "learned", "neutral"
     elif args.parameters == "shape":
-        # Shape does not depend on the learned pose network.  A kinematic pose
-        # is generated only for the optional mesh export.
-        pose, shape = "kinematic", "temporal"
+        # Shape does not depend on the learned pose network. Optimized neutral
+        # pose is used only when a mesh preview is requested.
+        pose, shape = "optimization", "temporal"
     else:
         pose, shape = "learned", "temporal"
 

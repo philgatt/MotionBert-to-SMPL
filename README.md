@@ -18,7 +18,7 @@ https://github.com/user-attachments/assets/fc9e1649-e26f-4ee7-aa43-ad0a5fd82ad3
 
 | Component | Choices |
 | --- | --- |
-| Pose | Kinematic solver, Adam optimisation, or learned pose-only SMPLR regressor |
+| Pose | Adam optimisation or learned pose-only SMPLR regressor |
 | Shape | Neutral body shape or learned temporal shape regressor |
 | Visualisation | 2D keypoints, MotionBERT skeleton, and SMPL mesh video |
 | Training and evaluation | 3DPW preprocessing, training, and VIBE-style evaluation |
@@ -40,7 +40,7 @@ Run a video with the included learned pose and shape checkpoints:
 python scripts/infer_video.py input.mp4 --parameters both --config configs/local.json --output outputs/demo
 ```
 
-Use `--parameters pose`, `shape`, or `both`. A mesh preview is created by default; pass `--visualize 2d 3d mesh` for every preview. The `video-to-smpl` command also supports `--pose kinematic|optimization|learned` and `--shape neutral|temporal`.
+Use `--parameters pose`, `shape`, or `both`. A mesh preview is created by default; pass `--visualize 2d 3d mesh` for every preview. The `video-to-smpl` command also supports `--pose optimization|learned` and `--shape neutral|temporal`.
 
 ## Train and evaluate on 3DPW
 
@@ -65,7 +65,7 @@ python scripts/run_3dpw_training.py \
   --smpl-data-root /path/to/MotionBERT/data/mesh
 ```
 
-Use `--model shape` to train the temporal shape regressor. Run `python scripts/run_3dpw_training.py --help` for the remaining options.
+Use `--model pose` to train the pose-only SMPLR regressor, or `--model shape` to train the temporal shape regressor. Both modes preprocess 3DPW when the required AlphaPose and MotionBERT outputs are absent, then write the selected checkpoint and `evaluation.json` under `training-runs/<run-name>`.
 
 ## Network architectures
 

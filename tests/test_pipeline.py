@@ -10,7 +10,6 @@ import torch
 from video_to_smpl.cli import parser, run
 from video_to_smpl.config import load_config, check_assets
 from video_to_smpl.keypoints import select_person, halpe_to_h36m, validate_coords
-from video_to_smpl.methods.kinematics import _m2b_rodrigues_from_a_to_b
 from video_to_smpl.methods.shape_inference import _make_windows, _predict_track
 
 
@@ -55,14 +54,6 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(mapped[0,7,0], 18.5)
         self.assertEqual(mapped[0,9,0], 0)
 
-    def test_rodrigues_parallel_and_antiparallel_are_rotations(self):
-        a = np.array([1.,0,0])
-        for b in [a, -a, np.array([0.,1,0])]:
-            matrix = _m2b_rodrigues_from_a_to_b(a,b)
-            np.testing.assert_allclose(matrix @ a, b, atol=1e-7)
-            np.testing.assert_allclose(matrix.T @ matrix, np.eye(3), atol=1e-7)
-            self.assertAlmostEqual(np.linalg.det(matrix), 1)
-
     def test_temporal_windows_cover_tail_and_do_not_cross_gaps(self):
         coords = np.zeros((12,17,3), dtype=np.float32)
         indices = np.array([0,1,2,3,4,5,6,20,21,22,23,24])
@@ -98,7 +89,7 @@ class PipelineTests(unittest.TestCase):
             path.write_text(json.dumps({"smpl_model":"models/body.pkl"}))
             config = load_config(path)
             self.assertEqual(Path(config["smpl_model"]), Path(directory) / "models/body.pkl")
-            self.assertTrue(check_assets(config,"kinematic","neutral",from_coords=True))
+            self.assertTrue(check_assets(config,"optimization","neutral",from_coords=True))
 
     def test_no_overwrite(self):
         with tempfile.TemporaryDirectory() as directory:
