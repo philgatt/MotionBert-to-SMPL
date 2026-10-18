@@ -56,6 +56,43 @@ video-to-smpl --config configs/local.json --pose learned --shape temporal --chec
 
 `--check` validates paths, not whether model weights are compatible. Use the supplied checkpoint names and coordinate conventions from `configs/example.json`.
 
+## Process 3DPW from frames
+
+The repository includes the same dataset stages used by the thesis pipeline. They preserve the original 3DPW frame timeline, run AlphaPose on the VIBE-style ground-truth person boxes (so the detector is skipped), insert explicit zero entries for missed poses, and linearly interpolate only gaps bounded by valid detections. MotionBERT then consumes those aligned HALPE-26 tracks using its original `WildDetDataset` preprocessing.
+
+The standard 3DPW preprocessing bundle is detected automatically when it contains these files:
+
+```text
+3DPW/
+  imageFiles/imageFiles/<sequence>/image_00000.jpg
+  preprocessed_train/3dpw_train.npz
+  preprocessed_val/3dpw_validation.npz
+  preprocessed_test/3dpw_test.npz
+```
+
+Run AlphaPose from its own environment. This command processes all three splits; use `--only-sequence` or `--split-filter` for a smaller run. Replace the example paths with your local checkout and weights.
+
+```sh
+python scripts/preprocess_3dpw_alphapose.py \
+  --dataset-root /data/3DPW \
+  --output-root outputs/3dpw \
+  --alphapose-repo /models/AlphaPose \
+  --alphapose-cfg configs/halpe_26/resnet/256x192_res50_lr1e-3_1x.yaml \
+  --alphapose-checkpoint /models/halpe26_fast_res50_256x192.pth
+```
+
+Then run MotionBERT from the verified `motionbert` environment:
+
+```sh
+python scripts/preprocess_3dpw_motionbert.py \
+  --output-root outputs/3dpw \
+  --motionbert-repo /models/MotionBERT \
+  --motionbert-config configs/pose3d/MB_ft_h36m_global_lite.yaml \
+  --motionbert-checkpoint checkpoint/pose3d/FT_MB_lite_MB_ft_h36m_global_lite/best_epoch.bin
+```
+
+The generated files are grouped as `predictions/alphapose/<split>/<sequence>/person_<id>` and `predictions/motionbert/<split>/<sequence>/person_<id>`. The AlphaPose folder contains the aligned JSON, `frame_indices_prediction.npy`, `frame_missing_mask_prediction.npy`, and `frame_interpolated_mask_prediction.npy`; MotionBERT writes the aligned `X3D_prediction.npy`. Pass the three `--preprocessed-*` paths explicitly if the VIBE-format metadata lives outside the 3DPW root. The native 3DPW images alone do not contain these exact VIBE tracks.
+
 ## Run
 
 ```sh
