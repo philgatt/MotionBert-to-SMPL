@@ -18,6 +18,20 @@ Choose pose and shape independently. No evaluation dataset or ground-truth annot
 | `--shape neutral` | Ten zero shape coefficients |
 | `--shape temporal` | Existing residual temporal shape network; overlapping clips predict ten shape coefficients |
 
+## Learned network architectures
+
+### Pose-only SMPLR regressor
+
+The pose network maps 48 root-centred MotionBERT bone-direction values to 24 SMPL joint rotations. It uses the pose-only design shown below, without a shape branch.
+
+![Pose-only SMPLR regressor architecture](assets/pose_network_architecture.png)
+
+### Temporal shape regressor
+
+The shape network processes raw, non-root-centred MotionBERT keypoint sequences and predicts the ten SMPL shape coefficients with an eight-block residual temporal convolutional network.
+
+![Temporal shape regressor architecture](assets/shape_network_architecture.png)
+
 The project includes recreated learned checkpoints. The pose model is the Figure 3.3 pose-only SMPLR architecture with a 48-dimensional root-centred bone-direction input and no shape branch. The temporal shape model is the Figure 3.4 eight-residual-block Res-TCN: raw non-root-centred 17-joint MotionBERT sequences, 50-frame windows, Rx180 coordinate convention, and a 10-coefficient regression head.
 
 ## Setup

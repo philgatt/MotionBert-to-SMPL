@@ -27,4 +27,6 @@ configs/local*.json
 assets/*
 !assets/fencing_full_pipeline.mp4
 !assets/fencing_preview.gif
+!assets/pose_network_architecture.png
+!assets/shape_network_architecture.png
 .DS_Store
