@@ -29,3 +29,7 @@ assets/*
 !assets/pose_network_architecture.png
 !assets/shape_network_architecture.png
 .DS_Store
+
+# Dataset placeholders are tracked; downloaded data is local only.
+data/*
+!data/README.md
