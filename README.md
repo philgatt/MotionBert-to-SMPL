@@ -93,7 +93,40 @@ python scripts/preprocess_3dpw_motionbert.py \
 
 The generated files are grouped as `predictions/alphapose/<split>/<sequence>/person_<id>` and `predictions/motionbert/<split>/<sequence>/person_<id>`. The AlphaPose folder contains the aligned JSON, `frame_indices_prediction.npy`, `frame_missing_mask_prediction.npy`, and `frame_interpolated_mask_prediction.npy`; MotionBERT writes the aligned `X3D_prediction.npy`. Pass the three `--preprocessed-*` paths explicitly if the VIBE-format metadata lives outside the 3DPW root. The native 3DPW images alone do not contain these exact VIBE tracks.
 
+## Train and evaluate on 3DPW
+
+`run_3dpw_training.py` joins preprocessing, training, and evaluation into one local command. Select `pose` or `shape`; it reuses complete AlphaPose/MotionBERT intermediates under `--pipeline-root`, and creates them for all 3DPW splits when they are absent. The selected checkpoint and `evaluation.json` are written to `--runs-root/<run-name>`.
+
+The original training and evaluation protocol also needs VIBE's 3DPW split databases. They provide the SMPL pose and shape targets and are not included with a raw 3DPW download. Put `3dpw_train_db.npz`, `3dpw_val_db.npz`, and `3dpw_test_db.npz` in one folder and supply it as `--vibe-root`.
+
+```sh
+python scripts/run_3dpw_training.py \
+  --model pose \
+  --dataset-root /data/3DPW \
+  --vibe-root /data/vibe_db \
+  --pipeline-root outputs/3dpw \
+  --runs-root training-runs \
+  --run-name pose_3dpw_motionbert \
+  --alphapose-python /envs/alphapose/bin/python \
+  --motionbert-python /envs/motionbert/bin/python \
+  --alphapose-repo /models/AlphaPose \
+  --alphapose-cfg /models/AlphaPose/configs/halpe_26/resnet/256x192_res50_lr1e-3_1x.yaml \
+  --alphapose-checkpoint /models/AlphaPose/pretrained_models/halpe26_fast_res50_256x192.pth \
+  --motionbert-repo /models/MotionBERT \
+  --smpl-data-root /models/MotionBERT/data/mesh
+```
+
+Use `--model shape` to train the temporal shape network. Defaults follow the recreated runs: pose uses 40 epochs and shape uses 80. `--epochs`, `--batch-size`, `--lr`, `--activation`, and `--cpu` allow local overrides. Add `--force-preprocess` to regenerate intermediates deliberately; otherwise existing outputs are retained.
+
 ## Run
+
+For normal video use, first copy `configs/example.json` to `configs/local.json` and fill in the third-party AlphaPose, MotionBERT, and SMPL paths. The learned pose and shape checkpoint paths in the example already point to the included project weights. Then use the concise video command:
+
+```sh
+python scripts/infer_video.py input.mp4 --parameters both --config configs/local.json --output outputs/my_video
+```
+
+Choose `--parameters pose` to infer the learned SMPL pose with neutral shape, `shape` to infer the learned ten shape coefficients, or `both` to use both stored learned weights. A mesh video is produced by default; use `--visualize 2d 3d mesh` for every preview.
 
 ```sh
 video-to-smpl input.mp4 --config configs/local.json --pose kinematic --shape neutral --visualize 2d 3d mesh --output outputs/example
