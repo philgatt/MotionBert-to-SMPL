@@ -1,7 +1,6 @@
-# Video to SMPL
+# Project for Bachelors Thesis in Artificial Intelligence
 
-> [!IMPORTANT]
-> ## 🎓 [Read the accompanying Bachelor's thesis](docs/Monocular_Human_Mesh_Reconstruction_from_Sparse_3D_Keypoints.pdf)
+> ## [Read the accompanying Bachelor's thesis](docs/Monocular_Human_Mesh_Reconstruction_from_Sparse_3D_Keypoints.pdf)
 > **Monocular Human Mesh Reconstruction from Sparse 3D Keypoints**<br>
 > Johannes Kepler University Linz · October 2026
 
